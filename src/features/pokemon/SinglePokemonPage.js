@@ -2,6 +2,9 @@ import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { fetchPokemon } from './pokemonSlice'
 
+import sprite_front from './nosprite_front.png'
+import sprite_back from './nosprite_back.png'
+
 const setupSpecies = (species) => {
     const cardContent = species ? speciesCard(species) : 
         speciesCard({"name": "no pokemon selected", "url": "url not available"});
@@ -63,7 +66,7 @@ const moveCard = (move) => {
     )
 }
 
-const setupStats = (stats) =>{
+const setupStats = (stats) => {
     const statsStatus = stats ? (stats.length !== 0) : false;
     const statsContent = statsStatus ? stats.map(stat => statCard(stat)) :
         statCard({ stat : { name : "No stats received"}, base_stat : "N/A"})
@@ -83,6 +86,46 @@ const statCard = (stat) => {
     )
 }
 
+const setupSprites = (sprites) => {
+    const layoutSprites = (sprites) => {
+        let content;
+        if (!sprites) {
+            content = (
+                <article className="spriteLayout">
+                    {spriteCard(sprite_front)}
+                    {spriteCard(sprite_back)}
+                </article>
+            )
+        } else {
+            content = (
+                <article className="spriteLayout">
+                    {sprites.front_default ? spriteCard(sprites.front_default, "Front") : spriteCard(sprite_front, "Front")}
+                    {sprites.back_default ? spriteCard(sprites.back_default, "Back") : spriteCard(sprite_back, "Back")}
+                </article>
+            )
+        }
+        return content;
+    }
+    return (
+        <article className="pokeSection">
+            <h1>Sprites</h1>
+            {layoutSprites(sprites)}
+        </article>
+    )
+}
+
+const spriteCard = (sprite, angle) => {
+    return (
+        <article className="sprite">
+            <h4>{angle ? angle : "no angle"}</h4>
+            <img 
+                src={sprite} 
+                alt="no sprite found">
+            </img>
+        </article>
+    )
+}
+
 export const SinglePokemonPage = () => {
     const dispatch = useDispatch()
     const pokemon = useSelector(state => state.pokemon.pokemon)
@@ -96,6 +139,7 @@ export const SinglePokemonPage = () => {
     const species = setupSpecies(pokemon.species);
     const moves = setupMoves(pokemon.moves);
     const stats = setupStats(pokemon.stats);
+    const sprites = setupSprites(pokemon.sprites)
 
     let content;
 
@@ -118,6 +162,7 @@ export const SinglePokemonPage = () => {
                 {abilities}
                 {moves}
                 {stats}
+                {sprites}
             </article>
         )
     }

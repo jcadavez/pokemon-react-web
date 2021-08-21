@@ -11,12 +11,6 @@ const initialState = {
         height: 3,
         id: 132,
         name: "ditto",
-        sprites: {
-            "back_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/132.png",
-            "back_female": null,
-            "front_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/132.png",
-            "front_female": null
-        },
         types: [
             {
                 "slot": 1,
@@ -38,7 +32,13 @@ export const fetchPokemon = createAsyncThunk('pokemon/fetchpokemon', async () =>
     const { abilities, forms, height, 
         id, moves, name, species, 
         sprites, stats, types, weight } = response
-    return { species : species, abilities : abilities, moves: moves, stats: stats };
+    return { 
+        species : species, 
+        abilities : abilities, 
+        moves: moves, 
+        stats: stats,
+        sprites: sprites
+    };
 })
 
 const pokemonSlice = createSlice({
@@ -51,12 +51,13 @@ const pokemonSlice = createSlice({
         },
         [fetchPokemon.fulfilled]: (state, action) => {
             state.status = 'succeeded'
-            const { species, abilities, moves, stats } = action.payload;
+            const { species, abilities, moves, stats, sprites } = action.payload;
             state.pokemon = { 
                 species : species, 
                 abilities : abilities, 
                 moves: moves,
-                stats: stats
+                stats: stats,
+                sprites: sprites
             }
             state.error = null;
         },
