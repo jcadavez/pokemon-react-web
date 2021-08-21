@@ -1,4 +1,4 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
     pokemon: {
@@ -312,10 +312,34 @@ const initialState = {
     error: null
 }
 
+export const fetchPokemon = createAsyncThunk('pokemon/fetchpokemon', async () => {
+    let response = await fetch('https://pokeapi.co/api/v2/pokemon/ditto')
+        .then(response => response.json())
+    const { abilities, forms, height, 
+        id, moves, name, species, 
+        sprites, stats, types, weight } = response
+    return { species : species };
+})
+
 const pokemonSlice = createSlice({
     name: 'pokemon',
     initialState,
-    reducers: {}
+    reducers: {},
+    extraReducers: {
+        [fetchPokemon.pending]: (state, action) => {
+            state.status = 'loading'
+        },
+        [fetchPokemon.fulfilled]: (state, action) => {
+            state.status = 'succeeded'
+            const { species } = action.payload;
+            state.pokemon = { species : species }
+            state.error = null;
+        },
+        [fetchPokemon.rejected]: (state, action) => {
+            state.status = 'failed'
+            state.error = action.error.message
+        }
+    }
 })
 
 export default pokemonSlice.reducer
