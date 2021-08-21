@@ -2,6 +2,20 @@ import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { fetchPokemon } from './pokemonSlice'
 
+const setupSpecies = (species) => {
+    return species ? speciesCard(species) : 
+        speciesCard({"name": "no pokemon selected", "url": "url not available"});
+}
+
+const speciesCard = (specie) => {
+    return (
+        <article className="specie">
+            <h2>{specie.name}</h2>
+            <p>{specie.url}</p>
+        </article>
+    )
+}
+
 const setupAbilities = (abilities) => {
     const abilityStatus = abilities ? (abilities.length !== 0) : false;
     return abilityStatus ? abilities.map(ability => abilityCard(ability)) : 
@@ -27,6 +41,7 @@ export const SinglePokemonPage = () => {
     }
 
     const abilities = setupAbilities(pokemon.abilities);
+    const species = setupSpecies(pokemon.species);
 
     let content;
 
@@ -45,8 +60,7 @@ export const SinglePokemonPage = () => {
     } else {
         content = (
             <article className="pokemon">
-                <h2>{pokemon.species.name}</h2>
-                <p>{pokemon.species.url}</p>
+                {species}
                 {abilities}
             </article>
         )
