@@ -63,6 +63,26 @@ const moveCard = (move) => {
     )
 }
 
+const setupStats = (stats) =>{
+    const statsStatus = stats ? (stats.length !== 0) : false;
+    const statsContent = statsStatus ? stats.map(stat => statCard(stat)) :
+        statCard({ stat : { name : "No stats received"}, base_stat : "N/A"})
+    return (
+        <article className="pokeSection">
+            <h1>Stats</h1>
+            {statsContent}
+        </article>
+    )
+}
+
+const statCard = (stat) => {
+    return (
+        <article className="stat">
+            <h3>{`${stat.stat.name} : ${stat.base_stat}`}</h3>
+        </article>
+    )
+}
+
 export const SinglePokemonPage = () => {
     const dispatch = useDispatch()
     const pokemon = useSelector(state => state.pokemon.pokemon)
@@ -75,6 +95,7 @@ export const SinglePokemonPage = () => {
     const abilities = setupAbilities(pokemon.abilities);
     const species = setupSpecies(pokemon.species);
     const moves = setupMoves(pokemon.moves);
+    const stats = setupStats(pokemon.stats);
 
     let content;
 
@@ -96,6 +117,7 @@ export const SinglePokemonPage = () => {
                 {species}
                 {abilities}
                 {moves}
+                {stats}
             </article>
         )
     }
