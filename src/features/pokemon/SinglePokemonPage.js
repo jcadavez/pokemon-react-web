@@ -2,6 +2,21 @@ import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { fetchPokemon } from './pokemonSlice'
 
+const setupAbilities = (abilities) => {
+    const abilityStatus = abilities ? (abilities.length !== 0) : false;
+    return abilityStatus ? abilities.map(ability => abilityCard(ability)) : 
+        abilityCard({ "ability" : { "name" : "NONE", "url" : "none"}});
+}
+
+const abilityCard = (ability) => {
+    return (
+        <article className="ability">
+            <h3>{ability.ability.name}</h3>
+            <p>{ability.ability.url}</p>
+        </article>
+    )
+}
+
 export const SinglePokemonPage = () => {
     const dispatch = useDispatch()
     const pokemon = useSelector(state => state.pokemon.pokemon)
@@ -10,6 +25,8 @@ export const SinglePokemonPage = () => {
     const getPokemonClicked = () => {
         dispatch(fetchPokemon())
     }
+
+    const abilities = setupAbilities(pokemon.abilities);
 
     let content;
 
@@ -30,6 +47,7 @@ export const SinglePokemonPage = () => {
             <article className="pokemon">
                 <h2>{pokemon.species.name}</h2>
                 <p>{pokemon.species.url}</p>
+                {abilities}
             </article>
         )
     }

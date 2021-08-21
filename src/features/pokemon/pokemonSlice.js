@@ -2,24 +2,6 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
     pokemon: {
-        abilities: [
-            {
-                "ability": {
-                    "name": "limber",
-                    "url": "https://pokeapi.co/api/v2/ability/7/"
-                },
-                "is_hidden": false,
-                "slot": 1
-            },
-            {
-                "ability": {
-                    "name": "imposter",
-                    "url": "https://pokeapi.co/api/v2/ability/150/"
-                },
-                "is_hidden": true,
-                "slot": 3
-            }
-        ],
         forms: [
             {
                 "name": "ditto",
@@ -238,8 +220,8 @@ const initialState = {
         ],
         name: "ditto",
         species: {
-            "name": "ditto",
-            "url": "https://pokeapi.co/api/v2/pokemon-species/132/"
+            "name": "no pokemon selected",
+            "url": "url not available"
         },
         sprites: {
             "back_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/132.png",
@@ -318,7 +300,7 @@ export const fetchPokemon = createAsyncThunk('pokemon/fetchpokemon', async () =>
     const { abilities, forms, height, 
         id, moves, name, species, 
         sprites, stats, types, weight } = response
-    return { species : species };
+    return { species : species, abilities : abilities };
 })
 
 const pokemonSlice = createSlice({
@@ -331,8 +313,8 @@ const pokemonSlice = createSlice({
         },
         [fetchPokemon.fulfilled]: (state, action) => {
             state.status = 'succeeded'
-            const { species } = action.payload;
-            state.pokemon = { species : species }
+            const { species, abilities } = action.payload;
+            state.pokemon = { species : species, abilities : abilities }
             state.error = null;
         },
         [fetchPokemon.rejected]: (state, action) => {
